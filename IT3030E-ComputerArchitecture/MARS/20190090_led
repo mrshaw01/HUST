@@ -1,0 +1,61 @@
+.text
+li $s0, 0xFFFF0004    # key code
+li $s1, 0xFFFF0000    # key ready
+li $s2, 0xFFFF0010    # left 7-seg
+
+wait: 
+    lw $t0, 0($s1)    # load key ready
+    beq $t0, $zero, wait
+
+read: 
+    lw $t0, 0($s0)    # load key code
+    bgt $t0, 57, wait
+    blt $t0, 48, wait
+ 
+printled:
+    bne $t0, 48, one
+    li $t0, 0x3f
+    j print
+    
+one: 
+    bne $t0, 49, two
+    li $t0, 0x06
+    j print
+two:
+    bne $t0, 50, three
+    li $t0, 0x5b
+    j print
+three:
+    bne $t0, 51, four
+    li $t0, 0x4f
+    j print
+four:
+    bne $t0, 52, five
+    li $t0, 0x66
+    j print
+five:
+    bne $t0, 53, six
+    li $t0, 0x6d
+    j print
+six:
+    bne $t0, 54, seven
+    li $t0, 0x7d
+    j print
+seven:
+    bne $t0, 55, eight
+    li $t0, 0x07
+    j print
+eight:
+    bne $t0, 56, nine
+    li $t0, 0x7f
+    j print
+nine:
+    bne $t0, 57, wait
+    li $t0, 0x6f
+    j print
+
+print:
+    sb $t0, 0($s2)
+    j wait
+
+ 
